@@ -12,7 +12,6 @@ import 'package:sudoku/widgets/square.dart';
 const int boardSize = 81;
 
 // TODO: Make a timer to measure your time to complete a sudoku
-// TODO: Make an appbar to restart the sudoku or generate a new one
 
 class BoardView extends StatelessWidget {
   const BoardView({super.key});
