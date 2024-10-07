@@ -9,6 +9,8 @@ import 'package:sudoku/cubit/board_cubit/game_cubit.dart';
 import 'package:sudoku/widgets/shortcuts.dart';
 import 'package:sudoku/widgets/square.dart';
 
+import 'appbar.dart';
+
 const int boardSize = 81;
 
 // TODO: Make a timer to measure your time to complete a sudoku
@@ -72,7 +74,8 @@ class BoardView extends StatelessWidget {
           DigitIntent:
               CallbackAction<DigitIntent>(onInvoke: (DigitIntent intent) {
             // Note: Digit is always valid so no need for checks
-            return gameCubit.changeSquareState(selectedSquare, intent.digitInputted);
+            return gameCubit.changeSquareState(
+                selectedSquare, intent.digitInputted);
           }),
           BackSpaceIntent: CallbackAction<BackSpaceIntent>(
               onInvoke: (BackSpaceIntent intent) {
@@ -107,10 +110,16 @@ class BoardView extends StatelessWidget {
   }
 
   Future<void> _gameWon(BuildContext context, GameCubit gameCubit) async {
+    gameCubit.endStopwatch();
     await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: const Center(child: Text("You won!")),
+              title: Column(
+                children: [
+                  const Text("You won!"),
+                  Text("Time: ${formatElapsedTime(gameCubit.state.stopwatch.elapsed)}")
+                ],
+              ),
               actionsAlignment: MainAxisAlignment.center,
               actions: [
                 TextButton(

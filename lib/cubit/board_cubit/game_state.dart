@@ -2,12 +2,15 @@ part of 'game_cubit.dart';
 
 @immutable
 abstract class GameState {
-  
   final List<BoardState> boardStates;
   final int boardIndex;
   final List<int> solution;
+  final Stopwatch stopwatch;
+  // final Timer timer;
 
-  const GameState(this.boardStates, this.solution, this.boardIndex);
+  const GameState(this.boardStates, this.solution, this.boardIndex,
+      this.stopwatch,// this.timer
+      );
 }
 
 @immutable
@@ -27,8 +30,7 @@ abstract class SquareState extends Equatable {
 
 @immutable
 final class FinalSquareState extends SquareState {
-
-  const FinalSquareState(int value): super._(value);
+  const FinalSquareState(int value) : super._(value);
 
   static FinalSquareState invalid() => const FinalSquareState(-1);
 
@@ -38,19 +40,22 @@ final class FinalSquareState extends SquareState {
 
 @immutable
 final class EditableSquareState extends SquareState {
-
   // Add the hint numbers later
   final List<int> hintNumbers;
 
-  const EditableSquareState(int value, this.hintNumbers): super._(value);
+  const EditableSquareState(int value, this.hintNumbers) : super._(value);
 
   @override
   List<Object?> get props => [super.value];
 }
 
 class GameInitial extends GameState {
-  const GameInitial(super.boardStates, super.solution, super.boardIndex);
+  const GameInitial(super.boardStates, super.solution, super.boardIndex,
+      super.stopwatch, // super.timer
+      );
 
-  static GameInitial initial() => GameInitial(List.empty(), List.empty(), -1);
-
+  static GameInitial initial() => GameInitial(List.empty(), List.empty(), -1,
+      Stopwatch(),
+      // Timer(Duration.zero, () => ())
+  );
 }

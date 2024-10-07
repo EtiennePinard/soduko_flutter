@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:sudoku/widgets/board_view.dart';
@@ -10,6 +12,26 @@ part 'game_state.dart';
 
 class GameCubit extends Cubit<GameState> {
   GameCubit() : super(GameInitial.initial());
+
+  void _createTimerCallback(Stopwatch stopwatch) {
+    Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
+      // Update elapsed time only if the stopwatch is running
+      if (stopwatch.isRunning) {
+        emit(GameInitial(
+            state.boardStates, state.solution, state.boardIndex, stopwatch));
+      }
+    });
+  }
+
+  void startStopwatch() {
+    final stopwatch = Stopwatch();
+    _createTimerCallback(stopwatch);
+    stopwatch.start();
+  }
+
+  void endStopwatch() {
+    state.stopwatch.stop();
+  }
 
   void changeHintDigits(int hintDigitToUpdate) {
     final currentBoard = state.boardStates[state.boardIndex];
@@ -35,7 +57,8 @@ class GameCubit extends Cubit<GameState> {
     boardStates[state.boardIndex] =
         BoardState(currentBoard.squareStates, currentBoard.currentIndex);
 
-    emit(GameInitial(boardStates, state.solution, state.boardIndex));
+    emit(GameInitial(
+        boardStates, state.solution, state.boardIndex, state.stopwatch));
   }
 
   void changeCurrentIndex(int indexToChangeTo) {
@@ -43,7 +66,8 @@ class GameCubit extends Cubit<GameState> {
     final boardStates = state.boardStates;
     boardStates[state.boardIndex] =
         BoardState(currentBoard.squareStates, indexToChangeTo);
-    emit(GameInitial(boardStates, state.solution, state.boardIndex));
+    emit(GameInitial(
+        boardStates, state.solution, state.boardIndex, state.stopwatch));
   }
 
   void changeSquareState(int squareIndex, int numberToChangeTo) {
@@ -61,7 +85,8 @@ class GameCubit extends Cubit<GameState> {
     boardStates[state.boardIndex] =
         BoardState(currentBoard.squareStates, currentBoard.currentIndex);
 
-    emit(GameInitial(boardStates, state.solution, state.boardIndex));
+    emit(GameInitial(
+        boardStates, state.solution, state.boardIndex, state.stopwatch));
   }
 
   void generateBoard(Random? random) {
@@ -85,7 +110,8 @@ class GameCubit extends Cubit<GameState> {
           "The sudoku library generated an unsolvable board, or the solving function has a bug in it.");
     }
 
-    emit(GameInitial([BoardState(squareStates, 0)], board, 0));
+    state.stopwatch.reset();
+    emit(GameInitial([BoardState(squareStates, 0)], board, 0, state.stopwatch));
   }
 
   void almostSolveSudoku() {
@@ -110,6 +136,7 @@ class GameCubit extends Cubit<GameState> {
     boardStates[state.boardIndex] =
         BoardState(currentBoard.squareStates, currentBoard.currentIndex);
 
-    emit(GameInitial(boardStates, state.solution, state.boardIndex));
+    emit(GameInitial(
+        boardStates, state.solution, state.boardIndex, state.stopwatch));
   }
 }

@@ -52,6 +52,7 @@ class Square extends StatelessWidget {
             color: squareState is FinalSquareState
                 ? unchangingDigitColor
                 : userInputtedDigitsColor,
+            fontWeight: FontWeight.bold
           ),
         ),
       ),
