@@ -6,11 +6,10 @@ abstract class GameState {
   final int boardIndex;
   final List<int> solution;
   final Stopwatch stopwatch;
-  // final Timer timer;
+  final Timer timer;
 
   const GameState(this.boardStates, this.solution, this.boardIndex,
-      this.stopwatch,// this.timer
-      );
+      this.stopwatch, this.timer);
 }
 
 @immutable
@@ -51,11 +50,8 @@ final class EditableSquareState extends SquareState {
 
 class GameInitial extends GameState {
   const GameInitial(super.boardStates, super.solution, super.boardIndex,
-      super.stopwatch, // super.timer
-      );
+      super.stopwatch, super.timer);
 
   static GameInitial initial() => GameInitial(List.empty(), List.empty(), -1,
-      Stopwatch(),
-      // Timer(Duration.zero, () => ())
-  );
+      Stopwatch(), Timer(Duration.zero, () => ()));
 }

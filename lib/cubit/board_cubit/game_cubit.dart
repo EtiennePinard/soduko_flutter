@@ -17,8 +17,8 @@ class GameCubit extends Cubit<GameState> {
     Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
       // Update elapsed time only if the stopwatch is running
       if (stopwatch.isRunning) {
-        emit(GameInitial(
-            state.boardStates, state.solution, state.boardIndex, stopwatch));
+        emit(GameInitial(state.boardStates, state.solution, state.boardIndex,
+            stopwatch, timer));
       }
     });
   }
@@ -31,6 +31,7 @@ class GameCubit extends Cubit<GameState> {
 
   void endStopwatch() {
     state.stopwatch.stop();
+    state.timer.cancel();
   }
 
   void changeHintDigits(int hintDigitToUpdate) {
@@ -57,8 +58,8 @@ class GameCubit extends Cubit<GameState> {
     boardStates[state.boardIndex] =
         BoardState(currentBoard.squareStates, currentBoard.currentIndex);
 
-    emit(GameInitial(
-        boardStates, state.solution, state.boardIndex, state.stopwatch));
+    emit(GameInitial(boardStates, state.solution, state.boardIndex,
+        state.stopwatch, state.timer));
   }
 
   void changeCurrentIndex(int indexToChangeTo) {
@@ -66,8 +67,8 @@ class GameCubit extends Cubit<GameState> {
     final boardStates = state.boardStates;
     boardStates[state.boardIndex] =
         BoardState(currentBoard.squareStates, indexToChangeTo);
-    emit(GameInitial(
-        boardStates, state.solution, state.boardIndex, state.stopwatch));
+    emit(GameInitial(boardStates, state.solution, state.boardIndex,
+        state.stopwatch, state.timer));
   }
 
   void changeSquareState(int squareIndex, int numberToChangeTo) {
@@ -85,8 +86,8 @@ class GameCubit extends Cubit<GameState> {
     boardStates[state.boardIndex] =
         BoardState(currentBoard.squareStates, currentBoard.currentIndex);
 
-    emit(GameInitial(
-        boardStates, state.solution, state.boardIndex, state.stopwatch));
+    emit(GameInitial(boardStates, state.solution, state.boardIndex,
+        state.stopwatch, state.timer));
   }
 
   void generateBoard(Random? random) {
@@ -111,7 +112,8 @@ class GameCubit extends Cubit<GameState> {
     }
 
     state.stopwatch.reset();
-    emit(GameInitial([BoardState(squareStates, 0)], board, 0, state.stopwatch));
+    emit(GameInitial(
+        [BoardState(squareStates, 0)], board, 0, state.stopwatch, state.timer));
   }
 
   void almostSolveSudoku() {
@@ -136,7 +138,7 @@ class GameCubit extends Cubit<GameState> {
     boardStates[state.boardIndex] =
         BoardState(currentBoard.squareStates, currentBoard.currentIndex);
 
-    emit(GameInitial(
-        boardStates, state.solution, state.boardIndex, state.stopwatch));
+    emit(GameInitial(boardStates, state.solution, state.boardIndex,
+        state.stopwatch, state.timer));
   }
 }
